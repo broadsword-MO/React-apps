@@ -1,13 +1,109 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+:root {
+    --bground: #75c6e2;
+    --calc: #333;
+    --display: #444;
+    --numbers: #1c1c90;
+    --equals: #bc0000;
+    --text: #eee;
+    --ops: #ef8d14;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
+        'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bground);
+}
+
+.App {
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}
+
+.calculator {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--calc);
+    padding: 1.2em;
+    margin: 1rem;
+    border-radius: 1.2rem;
+    overflow: hidden;
+    box-shadow: 0 0 30px 10px rgba(0, 0, 0, 0.3),
+        3px 3px 1px 3px rgb(26, 26, 26), 2px 2px 1px 3px inset rgb(89, 89, 89);
+}
+
+.display {
+    overflow: hidden;
+    color: var(--text);
+    background-color: var(--display);
+    text-align: right;
+    padding: 0.3em;
+    margin-bottom: 0.5em;
+    border-radius: 0.2rem;
+    font-size: 2.4rem;
+    box-shadow: 1px 1px 2px 2px inset #212121;
+    /* font-weight: bold; */
+}
+
+.display span {
+    font-size: 1.5rem;
+    color: #999;
+}
+
+button {
+    appearance: none;
+    border: none;
+    outline: none;
+    font-size: 1.4rem;
+    color: var(--text);
+    padding: 0.8em;
+    margin: 0.3em;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+.operators {
+    display: flex;
+}
+
+.operators button {
+    flex: 1 1 0%;
+    background-color: var(--ops);
+    box-shadow: 2px 2px 1px 1px #824700, 1px 1px 2px 1px inset #ffc278;
+    font-weight: 900;
+}
+
+.numbers {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.numbers button {
+    flex: 1 1 25%;
+    max-width: 30%;
+    background-color: var(--numbers);
+    box-shadow: 2px 2px 1px 1px #000083, 1px 1px 2px 1px inset #3434ff;
+}
+
+button.equals {
+    background-color: var(--equals);
+    box-shadow: 2px 2px 1px 1px #580000, 1px 1px 2px 1px inset #ff0000;
+}
+
+button:active {
+    opacity: 1;
+    box-shadow: none;
+    transform: translateX(1px) translateY(1px);
 }

@@ -6,7 +6,7 @@ function App() {
     const [num, setNum] = useState(''); // Mine, added 2022-08-09, Tue
 
     const ops = ['/', '*', '+', '-'];
-    const dec = '.';
+    // const dec = '.';
 
     // Mine, added 2022-07-26, Tue
     function evaluate(string) {
@@ -19,21 +19,20 @@ function App() {
     }
 
     // Mine, added 2022-08-09, Tue
-    // todo Rewrite param
-    const decUse = (value) => {
+    const decUse = (dec) => {
         if (num.toString().includes(dec)) {
             return; // Do nothing
         }
         if (calc === '') {
-            setCalc(0 + value);
+            setCalc(0 + dec); // Add a zero before decimal
         }
         if (num === '') {
-            setNum(0 + value);
-            setCalc(calc + 0 + value); // ?
+            setNum(0 + dec); // Add a zero before decimal
+            setCalc(calc + 0 + dec); // Ditto
         } else {
-            setNum(num + value);
-            setCalc(calc + value);
-            setResult(evaluate(calc + value).toString());
+            setNum(num + dec);
+            setCalc(calc + dec);
+            setResult(evaluate(calc + dec).toString());
         }
     };
 
@@ -63,24 +62,24 @@ function App() {
 
         setCalc(calc + op);
         setNum(''); // Mine
-
-        if (!ops.includes(op)) { // ?
-            setResult(evaluate(calc + op).toString());
-        }
     };
 
     const equals = () => {
+        if (result.includes('e') || calc.includes('e')) {
+            setCalc(evaluate(calc).toString());
+        } else {
+            setCalc(round(evaluate(calc)).toString());
+        }
         setNum(calc);
-        setCalc(round(evaluate(calc)).toString());
         setResult('');
     };
 
-    const deleteAll = () => {
+    const allClear = () => {
         if (calc === '') {
             return;
         }
         // setCalc(calc.slice(0, -1)); // For CE
-        setCalc(calc.slice(0, 0)); // Clears all
+        setCalc(''); // Clears all
         setResult('');
         setNum('');
     };
@@ -96,27 +95,39 @@ function App() {
         return digits;
     };
 
+    // var eve = "";
+    // const keyHandler = (event) => {
+    //     eve = event.toString();
+    //     return eve;
+    // }
+
     return (
         <div className="App">
-            {/* <p>num = {num};</p>
-            <p>calc = {calc};</p>
-            <p>result = {result};</p> */}
+            <div>
+                num = {num}; calc = {calc}; result = {result};
+            </div>
+            {/* <div onKeyDown={keyHandler}>event = {eve}</div> */}
             <div className="calculator">
                 <div className="display">
-                    {result ? <span>({result})</span> : ''} {calc || '0'}
+                    {result ? <div className="preview">({result})</div> : ''}{' '}
+                    {calc || '0'}
                 </div>
                 <div className="operators">
                     <button onClick={() => updateOper('/')}>/</button>
-                    <button onClick={() => updateOper('*')}>*</button>
+                    <button onClick={() => updateOper('*')}>x</button>
                     <button onClick={() => updateOper('+')}>+</button>
                     <button onClick={() => updateOper('-')}>-</button>
 
-                    <button onClick={deleteAll}>C</button>
+                    <button onClick={allClear}>AC</button>
                 </div>
                 <div className="numbers">
                     {createDigits()}
                     <button onClick={() => decUse('.')}>.</button>
-                    <button className="equals" onClick={equals}>
+                    <button
+                        className="equals"
+                        // onKeyDown={keyHandler}
+                        onClick={equals}
+                    >
                         =
                     </button>
                 </div>

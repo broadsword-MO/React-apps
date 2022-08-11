@@ -28,23 +28,24 @@ body {
 }
 
 .calculator {
-    width: 100%;
-    max-width: 400px;
+    /* width: 100%; */
+    width: 340px;
+    max-width: 340px;
     background-color: var(--calc);
     padding: 1.2em;
-    margin: 1rem;
+    margin: 1em;
     border-radius: 1.2rem;
-    overflow: hidden;
+    /* overflow: hidden; */
     box-shadow: 0 0 30px 10px rgba(0, 0, 0, 0.3),
         3px 3px 1px 3px rgb(26, 26, 26), 2px 2px 1px 3px inset rgb(89, 89, 89);
 }
 
 .display {
-    overflow: hidden;
+    overflow-y: auto;
     color: var(--text);
     background-color: var(--display);
     text-align: right;
-    padding: 0.3em;
+    padding: 0.1em 0.2em 0 0;
     margin-bottom: 0.5em;
     border-radius: 0.2rem;
     font-size: 2.4rem;
@@ -52,19 +53,26 @@ body {
     /* font-weight: bold; */
 }
 
-.display span {
+.preview {
     font-size: 1.5rem;
     color: #999;
 }
 
+/* Hide the 'display' horizontal scrollbar (except Firefox) */
+/* .display::-webkit-scrollbar {
+    display: none;
+} */
+
 button {
+    height: 5rem;
+    /* width: 4rem; */
     appearance: none;
     border: none;
-    outline: none;
-    font-size: 1.4rem;
+    /* outline: none; */
+    font-size: 1.7rem;
     color: var(--text);
-    padding: 0.8em;
-    margin: 0.3em;
+    padding: 0.3em;
+    margin: 0.2em;
     border-radius: 0.5rem;
     cursor: pointer;
     transition: 0.1s;
@@ -79,6 +87,7 @@ button:hover {
 }
 
 .operators button {
+    height: 3.4rem;
     flex: 1 1 0%;
     background-color: var(--ops);
     box-shadow: 2px 2px 1px 1px #824700, 1px 1px 2px 1px inset #ffc278;

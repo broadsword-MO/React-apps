@@ -1,12 +1,15 @@
 import { useState } from 'react';
+import { useEffect } from 'react'; // For keyboard use
 
 function App() {
     const [calc, setCalc] = useState('');
     const [result, setResult] = useState('');
     const [num, setNum] = useState(''); // Mine, added 2022-08-09, Tue
+    // const [key, setKey] = useState(''); // Mine, added 2022-08-11, Thu
 
     const ops = ['/', '*', '+', '-'];
-    // const dec = '.';
+    const nums = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+    // const nums = /[0-9]/;
 
     // Mine, added 2022-07-26, Tue
     function evaluate(string) {
@@ -52,11 +55,11 @@ function App() {
             calc === '' || // Display is empty
             (calc.slice(-1) === '-' && op === '-')
         ) {
-            // Already have one minus operator
+            // Or already have one minus operator
             return; // Do nothing
         }
         if (ops.includes(calc.slice(-1)) && op !== '-') {
-            // Just used another operator, replace
+            // Just used another operator, so replace
             return setCalc(calc.slice(0, -1) + op);
         }
 
@@ -78,7 +81,6 @@ function App() {
         if (calc === '') {
             return;
         }
-        // setCalc(calc.slice(0, -1)); // For CE
         setCalc(''); // Clears all
         setResult('');
         setNum('');
@@ -88,46 +90,102 @@ function App() {
         const digits = [];
         for (let i = 9; i >= 0; i--)
             digits.push(
-                <button onClick={() => updateNum(i.toString())} key={i}>
+                <button
+                    className="numButton"
+                    onClick={() => updateNum(i.toString())}
+                    key={i}
+                >
                     {i}
                 </button>
             );
         return digits;
     };
 
-    // var eve = "";
-    // const keyHandler = (event) => {
-    //     eve = event.toString();
-    //     return eve;
-    // }
+    // For using the keyboard
+    // useEffect(() => {
+    //     document.addEventListener('keydown', keyHandler, true);
+    // });
+
+    useEffect(() => {
+        // initiate the event handler
+        window.addEventListener('keydown', keyHandler, false);
+
+        // this will clean up the event every time the component is re-rendered
+        return function cleanup() {
+            window.removeEventListener('keydown', keyHandler);
+        };
+    });
+
+    const keyHandler = (event) => {
+        // setKey(event.key);
+        if (event.key === '.') {
+            decUse(event.key);
+        }
+        if (ops.includes(event.key)) {
+            updateOper(event.key);
+        }
+        if (nums.includes(event.key)) {
+            updateNum(event.key);
+        }
+        if (event.key === 'Enter' || event.key === '=') {
+            equals();
+        }
+        if (event.key === 'Delete') {
+            allClear();
+        }
+        if (event.key === 'Backspace') {
+            setCalc(calc.slice(0, -1)); // For CE
+        }
+        return;
+    };
 
     return (
         <div className="App">
-            <div>
+            {/* <div>
                 num = {num}; calc = {calc}; result = {result};
             </div>
-            {/* <div onKeyDown={keyHandler}>event = {eve}</div> */}
+            <div>onKeyDown event = '{key}'</div> */}
             <div className="calculator">
                 <div className="display">
-                    {result ? <div className="preview">({result})</div> : ''}{' '}
+                    {result ? <div className="preview">({result})</div> : ''}
                     {calc || '0'}
                 </div>
                 <div className="operators">
-                    <button onClick={() => updateOper('/')}>/</button>
-                    <button onClick={() => updateOper('*')}>x</button>
-                    <button onClick={() => updateOper('+')}>+</button>
-                    <button onClick={() => updateOper('-')}>-</button>
+                    <button
+                        className="opButton"
+                        onClick={() => updateOper('/')}
+                    >
+                        /
+                    </button>
+                    <button
+                        className="opButton"
+                        onClick={() => updateOper('*')}
+                    >
+                        x
+                    </button>
+                    <button
+                        className="opButton"
+                        onClick={() => updateOper('+')}
+                    >
+                        +
+                    </button>
+                    <button
+                        className="opButton"
+                        onClick={() => updateOper('-')}
+                    >
+                        -
+                    </button>
 
-                    <button onClick={allClear}>AC</button>
+                    <button className="opButton" onClick={allClear}>
+                        AC
+                    </button>
                 </div>
                 <div className="numbers">
                     {createDigits()}
-                    <button onClick={() => decUse('.')}>.</button>
-                    <button
-                        className="equals"
-                        // onKeyDown={keyHandler}
-                        onClick={equals}
-                    >
+                    <button className="numButton" onClick={() => decUse('.')}>
+                        .
+                    </button>
+                    <button className="equals" onClick={equals}>
                         =
                     </button>
                 </div>

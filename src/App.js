@@ -41,7 +41,7 @@ function App() {
 
     // Mine, added 2022-08-09, Tue
     const updateNum = (value) => {
-        if (num === '' && value === '0') {
+        if (calc.toString() === 'NaN' || (calc === '' && value === '0')) {
             // todo Edge case for max digits needed
             return;
         }
@@ -52,7 +52,8 @@ function App() {
 
     const updateOper = (op) => {
         if (
-            calc === '' || // Display is empty
+            calc === '' || // calc display is empty
+            calc.toString() === 'NaN' ||
             (calc.slice(-1) === '-' && op === '-')
         ) {
             // Or already have one minus operator
@@ -68,9 +69,20 @@ function App() {
     };
 
     const equals = () => {
-        if (result.includes('e') || calc.includes('e')) {
+        if (calc === '') {
+            return;
+        } else if (ops.includes(calc.slice(-1))) {
+            setCalc(calc.slice(0, -1));
+        } else if (
+            !num.includes('.') ||
+            !calc.includes('.') ||
+            result.includes('e+') ||
+            calc.includes('e+')
+        ) {
+            // No decimal rounding of numbers without decimals
             setCalc(evaluate(calc).toString());
         } else {
+            // Only round numbers with decimals (bc rounding with 16 or more digits before decimal returns NaN)
             setCalc(round(evaluate(calc)).toString());
         }
         setNum(calc);
@@ -134,7 +146,8 @@ function App() {
             allClear();
         }
         if (event.key === 'Backspace') {
-            setCalc(calc.slice(0, -1)); // For CE
+            setCalc(calc.slice(0, -1)); // CE, return all but the last
+            setResult(calc.slice(0, -1));
         }
         return;
     };
@@ -143,51 +156,58 @@ function App() {
         <div className="App">
             {/* <div>
                 num = {num}; calc = {calc}; result = {result};
-            </div>
-            <div>onKeyDown event = '{key}'</div> */}
+            </div> */}
+            {/* <div>onKeyDown event = '{key}'</div> */}
             <div className="calculator">
                 <div className="display">
-                    {result ? <div className="preview">({result})</div> : ''}
+                    <div className="preview">
+                        {result ? `(${result})` : '( )'}
+                    </div>
                     {calc || '0'}
                 </div>
-                <div className="operators">
-                    <button
-                        className="opButton"
-                        onClick={() => updateOper('/')}
-                    >
-                        /
-                    </button>
-                    <button
-                        className="opButton"
-                        onClick={() => updateOper('*')}
-                    >
-                        x
-                    </button>
-                    <button
-                        className="opButton"
-                        onClick={() => updateOper('+')}
-                    >
-                        +
-                    </button>
-                    <button
-                        className="opButton"
-                        onClick={() => updateOper('-')}
-                    >
-                        -
-                    </button>
+                <div className="numPad">
+                    <div className="operators">
+                        <button
+                            className="opButton"
+                            onClick={() => updateOper('/')}
+                        >
+                            /
+                        </button>
+                        <button
+                            className="opButton"
+                            onClick={() => updateOper('*')}
+                        >
+                            x
+                        </button>
+                        <button
+                            className="opButton"
+                            onClick={() => updateOper('+')}
+                        >
+                            +
+                        </button>
+                        <button
+                            className="opButton"
+                            onClick={() => updateOper('-')}
+                        >
+                            -
+                        </button>
 
-                    <button className="opButton" onClick={allClear}>
-                        AC
-                    </button>
-                </div>
-                <div className="numbers">
-                    {createDigits()}
-                    <button className="numButton" onClick={() => decUse('.')}>
-                        .
-                    </button>
-                    <button className="equals" onClick={equals}>
-                        =
-                    </button>
+                        <button className="opButton clear" onClick={allClear}>
+                            AC
+                        </button>
+                    </div>
+                    <div className="numbers">
+                        {createDigits()}
+                        <button
+                            className="numButton"
+                            onClick={() => decUse('.')}
+                        >
+                            .
+                        </button>
+                        <button className="equalButton" onClick={equals}>
+                            =
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -195,3 +215,5 @@ function App() {
 }
 
 export default App;
+// ReactDOM.render(<App />, document.getElementById("root"));
+// const root = ReactDOM.createRoot(document.getElementById("root"));
